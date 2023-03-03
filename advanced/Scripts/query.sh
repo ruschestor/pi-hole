@@ -107,11 +107,12 @@ scanDatabaseTable() {
         local searchstr
 
         # Are there ABP entries on gravity?
-        local abpquerystr="SELECT domain FROM gravity WHERE domain LIKE '||%^' LIMIT 1"
+        # Return 1 if abp_domain=1 or Zero if abp_domain=0 or not set
+        local abpquerystr="SELECT EXISTS (SELECT 1 FROM info WHERE property='abp_domain' and value='1')"
         local abpfound="$(pihole-FTL sqlite3 "${gravityDBfile}" "${abpquerystr}")" 2> /dev/null
 
         # Create search string for ABP entries only if needed
-        if [ -n "${abpfound}" ]; then
+        if [ "${abpfound}" -eq 1 ]; then
             local abpentry="${domain}"
 
             searchstr="'||${abpentry}^'"
