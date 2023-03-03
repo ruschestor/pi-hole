@@ -95,7 +95,9 @@ fi
 
 scanDatabaseTable() {
     local domain table list_type querystr result extra
-    domain="$(printf "%q" "${1}")"
+
+    # Remove trailing dot from domain
+    domain="$(printf "%q" "${1}" | sed 's/\.$//')"
     table="${2}"
     list_type="${3:-}"
 
